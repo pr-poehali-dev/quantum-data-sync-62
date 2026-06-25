@@ -19,11 +19,11 @@ export function AboutSection({ scrollToSection }: { scrollToSection?: (index: nu
               }`}
             >
               <h2 className="mb-3 font-sans text-3xl font-light leading-[1.1] tracking-tight text-foreground md:mb-4 md:text-6xl lg:text-7xl">
-                Свет
+                Российское
                 <br />
-                и прозрачность
+                производство
                 <br />
-                <span className="text-foreground/40">в каждом объекте</span>
+                <span className="text-foreground/40">полного цикла</span>
               </h2>
             </div>
 
@@ -34,10 +34,10 @@ export function AboutSection({ scrollToSection }: { scrollToSection?: (index: nu
               style={{ transitionDelay: "200ms" }}
             >
               <p className="max-w-md text-sm leading-relaxed text-foreground/90 md:text-lg">
-                Мы производим и монтируем алюминиевые светопрозрачные конструкции для фасадов, коттеджей и интерьеров.
+                Завод Алюминиевых Конструкций — российская компания с собственным производством, складом готовой продукции и автопарком для доставки по всей стране.
               </p>
               <p className="max-w-md text-sm leading-relaxed text-foreground/90 md:text-lg">
-                Полный цикл — от замера и проектирования до собственного производства и монтажа под ключ.
+                Работаем на собственных оборотных средствах — без задержек и зависимости от посредников. Проектирование, производство профиля, изготовление конструкций и монтаж под ключ.
               </p>
             </div>
           </div>
@@ -45,9 +45,9 @@ export function AboutSection({ scrollToSection }: { scrollToSection?: (index: nu
           {/* Right side - Stats with creative layout */}
           <div className="flex flex-col justify-center space-y-6 md:space-y-12">
             {[
-              { value: "500+", label: "Объектов", sublabel: "Остеклено по всей стране", direction: "right" },
-              { value: "15", label: "Лет", sublabel: "На рынке остекления", direction: "left" },
-              { value: "5", label: "Лет", sublabel: "Гарантия на конструкции", direction: "right" },
+              { value: "700+", label: "Объектов", sublabel: "Реализовано по всей России", direction: "right" },
+              { value: "20", label: "Лет", sublabel: "Собственное производство", direction: "left" },
+              { value: "10", label: "Лет", sublabel: "Гарантия на конструкции", direction: "right" },
             ].map((stat, i) => {
               const getRevealClass = () => {
                 if (!isVisible) {
