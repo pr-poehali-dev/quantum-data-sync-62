@@ -182,32 +182,32 @@ export default function Index() {
       >
         <Shader className="h-full w-full">
           <Swirl
-            colorA="#1275d8"
-            colorB="#e19136"
-            speed={0.8}
-            detail={0.8}
-            blend={50}
-            coarseX={40}
-            coarseY={40}
-            mediumX={40}
-            mediumY={40}
-            fineX={40}
-            fineY={40}
+            colorA="#c9922a"
+            colorB="#0d1117"
+            speed={0.5}
+            detail={0.7}
+            blend={60}
+            coarseX={35}
+            coarseY={35}
+            mediumX={35}
+            mediumY={35}
+            fineX={30}
+            fineY={30}
           />
           <ChromaFlow
-            baseColor="#0066ff"
-            upColor="#0066ff"
-            downColor="#d1d1d1"
-            leftColor="#e19136"
-            rightColor="#e19136"
-            intensity={0.9}
-            radius={1.8}
-            momentum={25}
+            baseColor="#b8821e"
+            upColor="#d4a235"
+            downColor="#080c12"
+            leftColor="#6b4f1a"
+            rightColor="#c9922a"
+            intensity={0.85}
+            radius={1.6}
+            momentum={20}
             maskType="alpha"
-            opacity={0.97}
+            opacity={0.96}
           />
         </Shader>
-        <div className="absolute inset-0 bg-black/20" />
+        <div className="absolute inset-0 bg-black/40" />
       </div>
 
       <nav
@@ -220,9 +220,9 @@ export default function Index() {
           className="flex items-center gap-2 transition-transform hover:scale-105"
         >
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-foreground/15 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-foreground/25">
-            <span className="font-sans text-xl font-bold text-foreground">А</span>
+            <span className="font-sans text-xl font-bold text-foreground">З</span>
           </div>
-          <span className="font-sans text-xl font-semibold tracking-tight text-foreground">АлюмСвет</span>
+          <span className="font-sans text-xl font-semibold tracking-tight text-foreground">Завод АК</span>
         </button>
 
         <div className="hidden items-center gap-8 md:flex">
