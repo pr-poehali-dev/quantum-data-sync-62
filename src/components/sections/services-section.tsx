@@ -17,29 +17,29 @@ export function ServicesSection() {
           <h2 className="mb-2 font-sans text-5xl font-light tracking-tight text-foreground md:text-6xl lg:text-7xl">
             Услуги
           </h2>
-          <p className="font-mono text-sm text-foreground/60 md:text-base">/ Наши компетенции</p>
+          <p className="font-mono text-sm text-foreground/60 md:text-base">/ Что мы делаем</p>
         </div>
 
         <div className="grid gap-8 md:grid-cols-2 md:gap-x-16 md:gap-y-12 lg:gap-x-24">
           {[
             {
-              title: "Веб-разработка",
-              description: "Создание современных веб-приложений любой сложности",
+              title: "Остекление фасадов",
+              description: "Светопрозрачные фасады зданий любой сложности — стоечно-ригельные и структурные системы",
               direction: "top",
             },
             {
-              title: "UI/UX Дизайн",
-              description: "Проектирование удобных и красивых интерфейсов",
+              title: "Остекление коттеджей",
+              description: "Панорамное остекление частных домов, террас и зимних садов алюминиевым профилем",
               direction: "right",
             },
             {
-              title: "Мобильные приложения",
-              description: "Кроссплатформенная разработка для iOS и Android",
+              title: "Внутреннее остекление",
+              description: "Перегородки, входные группы и двери из алюминия для офисов и помещений",
               direction: "left",
             },
             {
-              title: "Консалтинг",
-              description: "Техническая экспертиза и стратегическое планирование",
+              title: "Производство и монтаж",
+              description: "Собственное производство конструкций и профессиональный монтаж под ключ",
               direction: "bottom",
             },
           ].map((service, i) => (
