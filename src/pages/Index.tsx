@@ -7,6 +7,7 @@ import { AboutSection } from "@/components/sections/about-section"
 import { ContactSection } from "@/components/sections/contact-section"
 import { PartnersSection } from "@/components/sections/partners-section"
 import { MagneticButton } from "@/components/magnetic-button"
+import { FacadeAnimation } from "@/components/facade-animation"
 import Icon from "@/components/ui/icon"
 import { useRef, useEffect, useState } from "react"
 
@@ -222,6 +223,8 @@ export default function Index() {
             <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background/30 to-transparent" />
           </div>
 
+          <FacadeAnimation />
+
           <div className="relative z-10 max-w-3xl">
             <div className="mb-5 flex flex-wrap items-center gap-2 animate-in fade-in slide-in-from-bottom-4 duration-700">
               <div className="inline-flex items-center gap-1.5 rounded-full border border-foreground/20 bg-foreground/10 px-4 py-1.5 backdrop-blur-md">
@@ -295,6 +298,17 @@ export default function Index() {
         @keyframes heroZoom {
           from { transform: scale(1.08); }
           to { transform: scale(1); }
+        }
+        @keyframes mullionDraw {
+          to { stroke-dashoffset: 0; }
+        }
+        @keyframes glintFadeIn {
+          to { opacity: 1; }
+        }
+        @keyframes glintSweep {
+          0% { background-position: 120% -20%; }
+          45% { background-position: -20% 120%; }
+          100% { background-position: -20% 120%; }
         }
       `}</style>
     </main>
