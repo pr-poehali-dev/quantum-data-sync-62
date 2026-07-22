@@ -300,7 +300,12 @@ export default function Index() {
           to { transform: scale(1); }
         }
         @keyframes mullionDraw {
-          to { stroke-dashoffset: 0; }
+          from { opacity: 0; stroke-dashoffset: 1; }
+          to { opacity: 0.14; stroke-dashoffset: 0; }
+        }
+        @keyframes mullionSettle {
+          from { opacity: 0.14; }
+          to { opacity: 0.05; }
         }
         @keyframes glintFadeIn {
           to { opacity: 1; }
