@@ -1,12 +1,13 @@
 import { useReveal } from "@/hooks/use-reveal"
 
-export function ServicesSection() {
+export function ServicesSection({ id }: { id?: string }) {
   const { ref, isVisible } = useReveal(0.3)
 
   return (
     <section
+      id={id}
       ref={ref}
-      className="flex h-screen w-screen shrink-0 snap-start items-center px-6 pt-20 md:px-12 md:pt-0 lg:px-16"
+      className="flex h-screen w-full shrink-0 snap-start items-center px-6 pt-20 md:px-12 md:pt-0 lg:px-16"
     >
       <div className="mx-auto w-full max-w-7xl">
         <div

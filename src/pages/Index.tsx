@@ -7,14 +7,16 @@ import { AboutSection } from "@/components/sections/about-section"
 import { ContactSection } from "@/components/sections/contact-section"
 import { PartnersSection } from "@/components/sections/partners-section"
 import { MagneticButton } from "@/components/magnetic-button"
+import Icon from "@/components/ui/icon"
 import { useRef, useEffect, useState } from "react"
+
+const NAV_ITEMS = ["Главная", "Проекты", "Услуги", "О нас", "Партнёры", "Контакты"]
 
 export default function Index() {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [currentSection, setCurrentSection] = useState(0)
   const [isLoaded, setIsLoaded] = useState(false)
-  const touchStartY = useRef(0)
-  const touchStartX = useRef(0)
+  const [menuOpen, setMenuOpen] = useState(false)
   const shaderContainerRef = useRef<HTMLDivElement>(null)
   const scrollThrottleRef = useRef<number>()
 
@@ -49,104 +51,22 @@ export default function Index() {
   }, [])
 
   const scrollToSection = (index: number) => {
-    if (scrollContainerRef.current) {
-      const sectionWidth = scrollContainerRef.current.offsetWidth
-      scrollContainerRef.current.scrollTo({
-        left: sectionWidth * index,
-        behavior: "smooth",
-      })
-      setCurrentSection(index)
-    }
+    document.getElementById(`section-${index}`)?.scrollIntoView({ behavior: "smooth", block: "start" })
+    setCurrentSection(index)
+    setMenuOpen(false)
   }
 
   useEffect(() => {
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStartY.current = e.touches[0].clientY
-      touchStartX.current = e.touches[0].clientX
-    }
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (Math.abs(e.touches[0].clientY - touchStartY.current) > 10) {
-        e.preventDefault()
-      }
-    }
-
-    const handleTouchEnd = (e: TouchEvent) => {
-      const touchEndY = e.changedTouches[0].clientY
-      const touchEndX = e.changedTouches[0].clientX
-      const deltaY = touchStartY.current - touchEndY
-      const deltaX = touchStartX.current - touchEndX
-
-      if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 50) {
-        if (deltaY > 0 && currentSection < 5) {
-          scrollToSection(currentSection + 1)
-        } else if (deltaY < 0 && currentSection > 0) {
-          scrollToSection(currentSection - 1)
-        }
-      }
-    }
-
     const container = scrollContainerRef.current
-    if (container) {
-      container.addEventListener("touchstart", handleTouchStart, { passive: true })
-      container.addEventListener("touchmove", handleTouchMove, { passive: false })
-      container.addEventListener("touchend", handleTouchEnd, { passive: true })
-    }
+    if (!container) return
 
-    return () => {
-      if (container) {
-        container.removeEventListener("touchstart", handleTouchStart)
-        container.removeEventListener("touchmove", handleTouchMove)
-        container.removeEventListener("touchend", handleTouchEnd)
-      }
-    }
-  }, [currentSection])
-
-  useEffect(() => {
-    const handleWheel = (e: WheelEvent) => {
-      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-        e.preventDefault()
-
-        if (!scrollContainerRef.current) return
-
-        scrollContainerRef.current.scrollBy({
-          left: e.deltaY,
-          behavior: "instant",
-        })
-
-        const sectionWidth = scrollContainerRef.current.offsetWidth
-        const newSection = Math.round(scrollContainerRef.current.scrollLeft / sectionWidth)
-        if (newSection !== currentSection) {
-          setCurrentSection(newSection)
-        }
-      }
-    }
-
-    const container = scrollContainerRef.current
-    if (container) {
-      container.addEventListener("wheel", handleWheel, { passive: false })
-    }
-
-    return () => {
-      if (container) {
-        container.removeEventListener("wheel", handleWheel)
-      }
-    }
-  }, [currentSection])
-
-  useEffect(() => {
     const handleScroll = () => {
       if (scrollThrottleRef.current) return
 
       scrollThrottleRef.current = requestAnimationFrame(() => {
-        if (!scrollContainerRef.current) {
-          scrollThrottleRef.current = undefined
-          return
-        }
-
-        const sectionWidth = scrollContainerRef.current.offsetWidth
-        const scrollLeft = scrollContainerRef.current.scrollLeft
-        const newSection = Math.round(scrollLeft / sectionWidth)
+        const containerHeight = container.clientHeight
+        const scrollTop = container.scrollTop
+        const newSection = Math.round(scrollTop / containerHeight)
 
         if (newSection !== currentSection && newSection >= 0 && newSection <= 5) {
           setCurrentSection(newSection)
@@ -156,15 +76,10 @@ export default function Index() {
       })
     }
 
-    const container = scrollContainerRef.current
-    if (container) {
-      container.addEventListener("scroll", handleScroll, { passive: true })
-    }
+    container.addEventListener("scroll", handleScroll, { passive: true })
 
     return () => {
-      if (container) {
-        container.removeEventListener("scroll", handleScroll)
-      }
+      container.removeEventListener("scroll", handleScroll)
       if (scrollThrottleRef.current) {
         cancelAnimationFrame(scrollThrottleRef.current)
       }
@@ -221,13 +136,13 @@ export default function Index() {
           className="flex items-center gap-2 transition-transform hover:scale-105"
         >
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-foreground/15 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-foreground/25">
-            <span className="font-sans text-xl font-bold text-foreground">З</span>
+            <span className="font-display text-xl font-bold text-foreground">З</span>
           </div>
-          <span className="font-sans text-xl font-semibold tracking-tight text-foreground">Завод АК</span>
+          <span className="font-display text-lg font-semibold tracking-tight text-foreground">Завод АК</span>
         </button>
 
         <div className="hidden items-center gap-8 md:flex">
-          {["Главная", "Проекты", "Услуги", "О нас", "Партнёры", "Контакты"].map((item, index) => (
+          {NAV_ITEMS.map((item, index) => (
             <button
               key={item}
               onClick={() => scrollToSection(index)}
@@ -245,47 +160,104 @@ export default function Index() {
           ))}
         </div>
 
-        <MagneticButton variant="secondary" onClick={() => scrollToSection(5)}>
-          Начать
-        </MagneticButton>
+        <div className="hidden md:block">
+          <MagneticButton variant="secondary" onClick={() => scrollToSection(5)}>
+            Начать
+          </MagneticButton>
+        </div>
+
+        <button
+          onClick={() => setMenuOpen((v) => !v)}
+          className="flex h-10 w-10 items-center justify-center rounded-lg bg-foreground/15 backdrop-blur-md transition-all hover:bg-foreground/25 md:hidden"
+          aria-label="Меню"
+        >
+          <Icon name={menuOpen ? "X" : "Menu"} size={20} className="text-foreground" />
+        </button>
       </nav>
+
+      {/* Mobile menu overlay */}
+      <div
+        className={`fixed inset-0 z-40 flex flex-col items-center justify-center gap-6 bg-background/95 backdrop-blur-xl transition-all duration-300 md:hidden ${
+          menuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+        }`}
+      >
+        {NAV_ITEMS.map((item, index) => (
+          <button
+            key={item}
+            onClick={() => scrollToSection(index)}
+            className={`font-display text-2xl font-medium transition-colors ${
+              currentSection === index ? "text-foreground" : "text-foreground/60"
+            }`}
+          >
+            {item}
+          </button>
+        ))}
+        <div className="mt-4">
+          <MagneticButton variant="primary" size="lg" onClick={() => scrollToSection(5)}>
+            Начать
+          </MagneticButton>
+        </div>
+      </div>
 
       <div
         ref={scrollContainerRef}
-        data-scroll-container
-        className={`relative z-10 flex h-screen overflow-x-auto overflow-y-hidden transition-opacity duration-700 ${
+        className={`relative z-10 h-screen snap-y snap-mandatory overflow-y-auto overflow-x-hidden transition-opacity duration-700 ${
           isLoaded ? "opacity-100" : "opacity-0"
         }`}
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {/* Hero Section */}
-        <section className="relative flex min-h-screen w-screen shrink-0 flex-col justify-end px-6 pb-16 pt-24 md:px-12 md:pb-24">
+        <section
+          id="section-0"
+          className="relative flex h-screen w-full shrink-0 snap-start flex-col justify-end px-6 pb-16 pt-24 md:px-12 md:pb-24"
+        >
           {/* Background image */}
           <div className="absolute inset-0 z-0">
             <img
               src="https://cdn.poehali.dev/projects/4cb08d0b-6818-4cdc-bdf5-5670606c7773/files/fc005d76-4ab3-43f8-9b7a-b538cb68bbdd.jpg"
               alt=""
-              className="h-full w-full object-cover"
+              className="h-full w-full scale-105 object-cover animate-[heroZoom_20s_ease-out_forwards]"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/20" />
             <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background/30 to-transparent" />
           </div>
 
           <div className="relative z-10 max-w-3xl">
-            <div className="mb-4 inline-block animate-in fade-in slide-in-from-bottom-4 rounded-full border border-foreground/20 bg-foreground/10 px-4 py-1.5 backdrop-blur-md duration-700">
-              <p className="font-mono text-xs text-foreground/90">Производство и монтаж</p>
+            <div className="mb-5 flex flex-wrap items-center gap-2 animate-in fade-in slide-in-from-bottom-4 duration-700">
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-foreground/20 bg-foreground/10 px-4 py-1.5 backdrop-blur-md">
+                <Icon name="Home" size={13} className="text-foreground/80" />
+                <p className="font-mono text-xs text-foreground/90">Частным клиентам</p>
+              </div>
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-foreground/20 bg-foreground/10 px-4 py-1.5 backdrop-blur-md">
+                <Icon name="Building2" size={13} className="text-foreground/80" />
+                <p className="font-mono text-xs text-foreground/90">Бизнесу и застройщикам</p>
+              </div>
             </div>
-            <h1 className="mb-6 animate-in fade-in slide-in-from-bottom-8 font-sans text-6xl font-light leading-[1.1] tracking-tight text-foreground duration-1000 md:text-7xl lg:text-8xl">
-              <span className="text-balance">
-                Завод Алюминиевых Конструкций
+
+            <h1 className="mb-6 font-display text-4xl font-bold leading-[1.1] tracking-tight text-foreground sm:text-5xl md:text-7xl lg:text-8xl">
+              <span className="inline-block animate-in fade-in slide-in-from-bottom-8 duration-1000">
+                Завод
+              </span>{" "}
+              <span
+                className="inline-block animate-in fade-in slide-in-from-bottom-8 bg-gradient-to-r from-foreground via-foreground to-foreground/60 bg-clip-text text-transparent duration-1000"
+                style={{ animationDelay: "120ms" }}
+              >
+                Алюминиевых
+              </span>{" "}
+              <span
+                className="inline-block animate-in fade-in slide-in-from-bottom-8 duration-1000"
+                style={{ animationDelay: "240ms" }}
+              >
+                Конструкций
               </span>
             </h1>
-            <p className="mb-8 max-w-xl animate-in fade-in slide-in-from-bottom-4 text-lg leading-relaxed text-foreground/90 duration-1000 delay-200 md:text-xl">
+
+            <p className="mb-8 max-w-xl animate-in fade-in slide-in-from-bottom-4 text-lg leading-relaxed text-foreground/90 duration-1000 delay-300 md:text-xl">
               <span className="text-pretty">
-                Производим и монтируем алюминиевые светопрозрачные конструкции: фасады зданий, остекление коттеджей и внутреннее остекление под ключ.
+                Производим и монтируем алюминиевые светопрозрачные конструкции — от панорамного остекления частного дома до фасада бизнес-центра под ключ.
               </span>
             </p>
-            <div className="flex animate-in fade-in slide-in-from-bottom-4 flex-col gap-4 duration-1000 delay-300 sm:flex-row sm:items-center">
+            <div className="flex animate-in fade-in slide-in-from-bottom-4 flex-col gap-4 duration-1000 delay-500 sm:flex-row sm:items-center">
               <MagneticButton
                 size="lg"
                 variant="primary"
@@ -299,26 +271,30 @@ export default function Index() {
             </div>
           </div>
 
-          <div className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 animate-in fade-in duration-1000 delay-500">
-            <div className="flex items-center gap-2">
-              <p className="font-mono text-xs text-foreground/80">Листайте вправо</p>
-              <div className="flex h-6 w-12 items-center justify-center rounded-full border border-foreground/20 bg-foreground/15 backdrop-blur-md">
-                <div className="h-2 w-2 animate-pulse rounded-full bg-foreground/80" />
+          <div className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 animate-in fade-in duration-1000 delay-700">
+            <div className="flex flex-col items-center gap-2">
+              <p className="font-mono text-xs text-foreground/80">Листайте вниз</p>
+              <div className="flex h-10 w-6 items-start justify-center rounded-full border border-foreground/20 bg-foreground/15 p-1.5 backdrop-blur-md">
+                <div className="h-2 w-1.5 animate-bounce rounded-full bg-foreground/80" />
               </div>
             </div>
           </div>
         </section>
 
-        <WorkSection />
-        <ServicesSection />
-        <AboutSection scrollToSection={scrollToSection} />
-        <PartnersSection />
-        <ContactSection />
+        <WorkSection id="section-1" />
+        <ServicesSection id="section-2" />
+        <AboutSection id="section-3" scrollToSection={scrollToSection} />
+        <PartnersSection id="section-4" />
+        <ContactSection id="section-5" />
       </div>
 
       <style>{`
         div::-webkit-scrollbar {
           display: none;
+        }
+        @keyframes heroZoom {
+          from { transform: scale(1.08); }
+          to { transform: scale(1); }
         }
       `}</style>
     </main>

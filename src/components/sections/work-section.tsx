@@ -40,14 +40,15 @@ const projects = [
   },
 ]
 
-export function WorkSection() {
+export function WorkSection({ id }: { id?: string }) {
   const { ref, isVisible } = useReveal(0.2)
   const [hovered, setHovered] = useState<number | null>(null)
 
   return (
     <section
+      id={id}
       ref={ref}
-      className="flex h-screen w-screen shrink-0 snap-start flex-col justify-center px-6 pt-20 md:px-12 md:pt-0 lg:px-16"
+      className="flex h-screen w-full shrink-0 snap-start flex-col justify-center px-6 pt-20 md:px-12 md:pt-0 lg:px-16"
     >
       <div className="mx-auto w-full max-w-7xl">
         <div
